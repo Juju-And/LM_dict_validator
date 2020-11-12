@@ -1,0 +1,3 @@
+Total input lines: 150
+Unique ort word count: 90
+Duplicates requiring manual validation: 47
