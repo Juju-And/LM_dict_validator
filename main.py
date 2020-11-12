@@ -47,12 +47,12 @@ def retrieve_list_from_input(input_file) -> List:
     return new_lines
 
 
-def find_duplicates_ort_vs_disp():
-    pass
-
-
-def list_unique_ort_words():
-    pass
+# def find_duplicates_ort_vs_disp():
+#     pass
+#
+#
+# def list_unique_ort_words():
+#     pass
 
 
 def generate_general_report(
