@@ -29,7 +29,6 @@ def verification(input_file):
             list_of_ort_disp_to_check.append(line)
 
     generate_duplicates_ort_vs_disp_report(list_of_duplicates=list_of_ort_disp_to_check)
-
     generate_general_report(
         total_len=len(lines),
         unique_ort_count=len(unique_ort_word),
