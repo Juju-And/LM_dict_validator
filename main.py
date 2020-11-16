@@ -26,6 +26,11 @@ def general_verification(input_file):
         list_of_duplicates=ort_symbols_duplicates, report_name="duplicates_ort_symbols"
     )
 
+    full_duplicates = find_full_duplicates(lines)
+    generate_duplicates_report(
+        list_of_duplicates=full_duplicates, report_name="duplicates_full"
+    )
+
 
 def retrieve_list_from_input(input_file) -> List:
     with open(input_file, encoding="utf8") as f:
@@ -40,6 +45,10 @@ def retrieve_list_from_input(input_file) -> List:
         new_lines.append(new_line)
 
     return new_lines
+
+
+def find_full_duplicates(lines) -> List:
+    return list(duplicates(lines))
 
 
 def find_duplicates_ort_vs_disp(lines) -> List:

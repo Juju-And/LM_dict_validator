@@ -144,6 +144,35 @@ class CheckNumberTest(unittest.TestCase):
         )
         d.cleanup()
 
+    def test_find_full_duplicates(self):
+        d = TempDirectory()
+        payload = (
+            "puchatek [Puchatek] p u h a t e k\n"
+            "puchatek [puchatek] p u h a t e k\n"
+            "puchatek [puchatek] p u h a t e k\n"
+            "puchatka [Puchatka] p u h a t k a\n"
+            "puchatka [puchatka] p u h a t k a\n"
+            "spróbuję [spróbuję] s p r u b u j e\n"
+            "spróbuję [spróbuję] s p r u b u j e\n"
+            "żabce [żabce] rz a p c e\n"
+        )
+        x = bytes(payload, "utf-8")
+        lines = main.retrieve_list_from_input(d.write("test3.txt", x))
+
+        # when
+        response = main.find_full_duplicates(lines)
+
+        # then
+        self.assertEqual(2, len(response))
+        self.assertEqual(
+            [
+                ["puchatek", "[puchatek]", "p u h a t e k\n"],
+                ["spróbuję", "[spróbuję]", "s p r u b u j e\n"],
+            ],
+            response,
+        )
+        d.cleanup()
+
 
 if __name__ == "__main__":
     unittest.main()

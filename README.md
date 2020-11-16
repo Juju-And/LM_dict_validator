@@ -40,8 +40,13 @@ requiring manual selection of valid versions.
 File containing only lines with duplicate values of `ort word` which contain symbols such as `-` or `_`.
 
 
-> duplicate_phonetics.dict
+> duplicates_phonetics.dict
 
 File containing only lines with duplicate phonetic values.
+
+> duplicates_full.dict
+
+File containing only lines which are fully duplicated to another line in 
+the input dictionary.
 
 
