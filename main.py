@@ -1,5 +1,6 @@
 import errno
 import os
+import re
 import sys
 from typing import List
 
@@ -18,6 +19,11 @@ def general_verification(input_file):
     phonetic_duplicates = find_phonetic_duplicates(lines)
     generate_duplicates_report(
         list_of_duplicates=phonetic_duplicates, report_name="duplicates_phonetics"
+    )
+
+    ort_symbols_duplicates = find_duplicate_ort_words_ignoring_symbols(lines)
+    generate_duplicates_report(
+        list_of_duplicates=ort_symbols_duplicates, report_name="duplicates_ort_symbols"
     )
 
 
@@ -71,7 +77,25 @@ def find_phonetic_duplicates(lines) -> List:
 
 
 def find_duplicate_ort_words_ignoring_symbols(lines) -> List:
-    pass
+    all_ort_with_symbols_list = []
+    all_ort_list = [line[0] for line in lines]
+
+    duplicates_with_symbols = []
+
+    pattern = re.compile(r"[-_]")
+
+    for line in lines:
+        if pattern.search(line[0]):
+            all_ort_with_symbols_list.append(line[0])
+
+    for line in lines:
+        if (
+            line[0] in all_ort_with_symbols_list
+            and line[0].replace("-", "").replace("_", "") in all_ort_list
+        ):
+            duplicates_with_symbols.append(line)
+
+    return duplicates_with_symbols
 
 
 def generate_duplicates_report(list_of_duplicates: List, report_name: str) -> None:

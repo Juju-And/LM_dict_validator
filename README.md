@@ -12,7 +12,7 @@ These instructions will get you a copy of the project up and running on your loc
 Install all required modules running pip with the provided file:
 
 ```
-pip install -r requirements.txt
+$ pip install -r requirements.txt
 ```
 
 ## Running locally
@@ -25,4 +25,15 @@ $ python3 main.py <input.dict>
 
 > duplicates_ort_vs_disp.dict
 
-File containing only lines with duplicate values between `ort word` and `disp word`, requiring manual selection of valid versions.
+File containing only lines with duplicate values between `ort word` and `disp word`, 
+requiring manual selection of valid versions.
+
+> duplicates_ort_symbols.dict
+
+File containing only lines with duplicate values of `ort word` which contain symbols such as `-` or `_`.
+
+> duplicate_phonetics.dict
+
+File containing only lines with duplicate phonetic values.
+
+
