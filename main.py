@@ -1,38 +1,23 @@
+import errno
+import os
 import sys
 from typing import List
 
+from iteration_utilities import duplicates
 
-def verification(input_file):
-    unique_ort_word = {}
-    unique_and_duplicates = []
 
+def general_verification(input_file):
     lines = retrieve_list_from_input(input_file)
 
-    # 2. check for unique keys (ort_words) and duplicates for disp_words
-    for i in range(len(lines)):
-        if (
-            lines[i][0] not in unique_ort_word.keys()
-            or unique_ort_word.get(lines[i][0]) != lines[i][1]
-        ):
-            unique_ort_word.update({lines[i][0]: lines[i][1]})
-            unique_and_duplicates.append(lines[i][0])
+    list_of_ort_disp_to_check = find_duplicates_ort_vs_disp(lines)
+    generate_duplicates_report(
+        list_of_duplicates=list_of_ort_disp_to_check,
+        report_name="duplicates_ort_vs_disp",
+    )
 
-    # 3. list only ort_word's which have multiple versions of disp_words
-    dupes_ort_list = [
-        x for n, x in enumerate(unique_and_duplicates) if x in unique_and_duplicates[:n]
-    ]
-
-    list_of_ort_disp_to_check = []
-
-    for line in lines:
-        if line[0] in dupes_ort_list:
-            list_of_ort_disp_to_check.append(line)
-
-    generate_duplicates_ort_vs_disp_report(list_of_duplicates=list_of_ort_disp_to_check)
-    generate_general_report(
-        total_len=len(lines),
-        unique_ort_count=len(unique_ort_word),
-        duplicates_count=len(list_of_ort_disp_to_check),
+    phonetic_duplicates = find_phonetic_duplicates(lines)
+    generate_duplicates_report(
+        list_of_duplicates=phonetic_duplicates, report_name="duplicates_phonetics"
     )
 
 
@@ -47,33 +32,64 @@ def retrieve_list_from_input(input_file) -> List:
     return new_lines
 
 
-# def find_duplicates_ort_vs_disp():
-#     pass
-#
-#
-# def list_unique_ort_words():
-#     pass
+def find_duplicates_ort_vs_disp(lines) -> List:
+    unique_ort_word = {}
+    unique_and_duplicates = []
+
+    # 2. check for unique keys (ort_words) and duplicates for disp_words
+    for i in range(len(lines)):
+        if (
+            lines[i][0] not in unique_ort_word.keys()
+            or unique_ort_word.get(lines[i][0]) != lines[i][1]
+        ):
+            unique_ort_word.update({lines[i][0]: lines[i][1]})
+            unique_and_duplicates.append(lines[i][0])
+
+    # 3. list only ort_word's which have multiple versions of disp_words
+    ort_duplicates = list(duplicates(unique_and_duplicates))
+
+    ort_disp_duplicate_lines = []
+
+    for line in lines:
+        if line[0] in ort_duplicates:
+            ort_disp_duplicate_lines.append(line)
+
+    return ort_disp_duplicate_lines
 
 
-def generate_general_report(
-    total_len: int, unique_ort_count: int, duplicates_count: int
-) -> None:
-    file1 = open("reports/general_report.txt", "a")
-    file1.truncate(0)
-    file1.write(
-        f"Total input lines: {total_len}\n"
-        f"Unique ort word count: {unique_ort_count}\n"
-        f"Duplicates of requiring manual validation: {duplicates_count}"
-    )
-    file1.close()
+def find_phonetic_duplicates(lines) -> List:
+    phonetic_duplicate_lines = []
+    all_phonetics_list = [line[2] for line in lines]
+
+    phonetic_duplicates = list(duplicates(all_phonetics_list))
+
+    for line in lines:
+        if line[2] in phonetic_duplicates:
+            phonetic_duplicate_lines.append(line)
+
+    return phonetic_duplicate_lines
 
 
-def generate_duplicates_ort_vs_disp_report(list_of_duplicates: List) -> None:
-    file2 = open("reports/duplicates_ort_vs_disp.dict", "a")
+def find_duplicate_ort_words_ignoring_symbols(lines) -> List:
+    pass
+
+
+def generate_duplicates_report(list_of_duplicates: List, report_name: str) -> None:
+    make_sure_path_exists("reports")
+
+    file2 = open(f"reports/{report_name}.dict", "a")
     file2.truncate(0)
     file2.write("".join(" ".join(el) for el in list_of_duplicates))
     file2.close()
 
 
+def make_sure_path_exists(path):
+    try:
+        os.makedirs(path)
+    except OSError as exception:
+        if exception.errno != errno.EEXIST:
+            raise
+
+
 if __name__ == "__main__":
-    verification(sys.argv[1])
+    general_verification(sys.argv[1])
