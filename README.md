@@ -15,6 +15,12 @@ Install all required modules running pip with the provided file:
 $ pip install -r requirements.txt
 ```
 
+### Executing the Tests
+
+```
+$ python3 tests.py
+```
+
 ## Running locally
 
 ```
@@ -28,9 +34,11 @@ $ python3 main.py <input.dict>
 File containing only lines with duplicate values between `ort word` and `disp word`, 
 requiring manual selection of valid versions.
 
+
 > duplicates_ort_symbols.dict
 
 File containing only lines with duplicate values of `ort word` which contain symbols such as `-` or `_`.
+
 
 > duplicate_phonetics.dict
 

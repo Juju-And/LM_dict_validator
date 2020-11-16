@@ -6,5 +6,9 @@ ENV/
 .Notes
 Notes
 
+reports
+
+__pycache__/
+
 ZadanieLM.pdf
 problem.dict

@@ -33,8 +33,12 @@ def retrieve_list_from_input(input_file) -> List:
 
     new_lines = []
     for line in lines:
-        new_line = line.replace(" [", "#[").replace("] ", "]#").split("#")
+        if " " is line[line.index("[")] or " " is line[line.index("]") + 1]:
+            new_line = line.replace(" [", "#[").replace("] ", "]#").split("#")
+        else:
+            new_line = line.replace("[", "#[").replace("]", "]#").split("#")
         new_lines.append(new_line)
+
     return new_lines
 
 
@@ -42,7 +46,7 @@ def find_duplicates_ort_vs_disp(lines) -> List:
     unique_ort_word = {}
     unique_and_duplicates = []
 
-    # 2. check for unique keys (ort_words) and duplicates for disp_words
+    # check for unique keys (ort_words) and duplicates for disp_words
     for i in range(len(lines)):
         if (
             lines[i][0] not in unique_ort_word.keys()
@@ -51,7 +55,7 @@ def find_duplicates_ort_vs_disp(lines) -> List:
             unique_ort_word.update({lines[i][0]: lines[i][1]})
             unique_and_duplicates.append(lines[i][0])
 
-    # 3. list only ort_word's which have multiple versions of disp_words
+    # list only ort_word's which have multiple versions of disp_words
     ort_duplicates = list(duplicates(unique_and_duplicates))
 
     ort_disp_duplicate_lines = []
@@ -59,7 +63,6 @@ def find_duplicates_ort_vs_disp(lines) -> List:
     for line in lines:
         if line[0] in ort_duplicates:
             ort_disp_duplicate_lines.append(line)
-
     return ort_disp_duplicate_lines
 
 
